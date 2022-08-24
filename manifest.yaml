@@ -1,0 +1,68 @@
+namespace: /bird
+
+server:
+  defines: runnable
+
+  metadata:
+    website: https://bird.network.cz/
+    name: The BIRD Internet Routing Daemon
+    publisher: monk.io
+    icon: https://saidvandeklundert.net/img/bird_logo.png
+    description: The BIRD project aims to develop a fully functional dynamic IP routing daemon primarily targeted on (but not limited to) Linux, FreeBSD and other UNIX-like systems and distributed under the GNU General Public License. 
+    source: https://gitlab.nic.cz/labs/bird
+    version: 1.0
+
+  files:
+    config:
+      container: bird4
+      mode: 0644
+      path: /etc/bird/bird.conf
+      contents: |
+        log "/dev/stdout" { debug, trace, info, remote, warning, error, auth, fatal, bug };
+
+        protocol device {
+        }
+
+        protocol direct {
+          disabled;
+          ipv4;
+          ipv6;
+        }
+
+        protocol kernel {
+          ipv4 {
+            export all;
+          };
+        }
+
+        protocol kernel {
+          ipv6 { 
+            export all;
+          };
+        }
+
+        protocol static {
+            ipv4;
+        }
+
+  containers:
+    bird4:
+      image: ghcr.io/akafeng/bird
+      image-tag: 2.0.9
+      # cap_add:
+      #   - NET_ADMIN
+      #   - NET_BROADCAST
+      #   - NET_RAW
+      ports:
+        - 179:179/tcp
+
+  actions:
+    show-status:
+      code: exec("bird4", "/bin/bash", "-c", `/usr/sbin/birdc show status`)
+      description: birdc show status
+    show-protocols-all:
+      code: exec("bird4", "/bin/bash", "-c", `/usr/sbin/birdc show protocols all`)
+      description: birdc show protocols all
+    show-route:
+      code: exec("bird4", "/bin/bash", "-c", `/usr/sbin/birdc show route`)
+      description: birdc show route

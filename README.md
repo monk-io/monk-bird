@@ -1,8 +1,9 @@
-BirdBGP meet Monk
+BirdBGP meets Monk
 ===
 
-This repository contains Monk.io template to deploy Bird BGP system either locally or on cloud of your choice (AWS, GCP, Azure, Digital Ocean).  
+This repository contains Monk.io template to deploy Bird BGP system either locally or on cloud of your choice (AWS, GCP, Azure, Digital Ocean).
 
+- [BirdBGP meets Monk](#birdbgp-meets-monk)
   - [Prerequisites](#prerequisites)
     - [Make sure monkd is running.](#make-sure-monkd-is-running)
     - [Clone Repository](#clone-repository)
@@ -39,8 +40,8 @@ git clone git@github.com:CuteAnonymousPanda/monk-bird.git
 
 ### Update configuration
 
-This template has very basic Bird configuration and will start a running copy of Bird, however it is most desired that you would update it with the configuration you would need.  
-To do so edit the `manifest.yaml` and in the `files` section replace the config provided with yours.  
+This template has very basic Bird configuration and will start a running copy of Bird, however it is most desired that you would update it with the configuration you would need.
+To do so edit the `manifest.yaml` and in the `files` section replace the config provided with yours.
 You could also use a `contents: <<< bird.conf` notation to read the contents of the file instead of providing it in-line.
 
 ### Load Template
@@ -55,8 +56,8 @@ monk load manifest.yaml
 ``` bash
 $ monk list -l bird
 ✔ Got the list
-Type      Template     Repository  Version  Tags  
-runnable  bird/server  local       -        -     
+Type      Template     Repository  Version  Tags
+runnable  bird/server  local       -        -
 ```
 
 ## Deploy Bird
@@ -73,8 +74,8 @@ $ monk run bird/server
 
 🔩 templates/local/bird/server
  └─🧊 Peer local
-    └─🔩 templates/local/bird/server 
-       └─📦 202f7b9e6ac73bb380e9de0464ca4593-local-bird-server-bird4 
+    └─🔩 templates/local/bird/server
+       └─📦 202f7b9e6ac73bb380e9de0464ca4593-local-bird-server-bird4
           ├─🧩 ghcr.io/akafeng/bird:2.0.9
           └─🔌 open tcp 1.1.1.1:179 -> 179
 
@@ -94,12 +95,12 @@ $ monk do bird/server/show-protocols-all
 ✔ Get templates/local/bird/server actions list success
 ✔ Got action parameters
 ✔ Parse parameters success
-✔ Running action: 
+✔ Running action:
 BIRD 2.0.9 ready.
 Name       Proto      Table      State  Since         Info
-device1    Device     ---        up     19:01:33.794  
+device1    Device     ---        up     19:01:33.794
 
-direct1    Direct     ---        down   19:01:33.794  
+direct1    Direct     ---        down   19:01:33.794
   Channel ipv4
     State:          DOWN
     Table:          master4
@@ -113,7 +114,7 @@ direct1    Direct     ---        down   19:01:33.794
     Input filter:   ACCEPT
     Output filter:  REJECT
 
-kernel1    Kernel     master4    up     19:01:33.794  
+kernel1    Kernel     master4    up     19:01:33.794
   Channel ipv4
     State:          UP
     Table:          master4
@@ -127,7 +128,7 @@ kernel1    Kernel     master4    up     19:01:33.794
       Export updates:              0          0          0        ---          0
       Export withdraws:            0        ---        ---        ---          0
 
-kernel2    Kernel     master6    up     19:01:33.794  
+kernel2    Kernel     master6    up     19:01:33.794
   Channel ipv6
     State:          UP
     Table:          master6
@@ -141,7 +142,7 @@ kernel2    Kernel     master6    up     19:01:33.794
       Export updates:              0          0          0        ---          0
       Export withdraws:            0        ---        ---        ---          0
 
-static1    Static     master4    up     19:01:33.794  
+static1    Static     master4    up     19:01:33.794
   Channel ipv4
     State:          UP
     Table:          master4
@@ -164,7 +165,7 @@ $ monk do bird/server/show-route
 ✔ Get templates/local/bird/server actions list success
 ✔ Got action parameters
 ✔ Parse parameters success
-✔ Running action: 
+✔ Running action:
 BIRD 2.0.9 ready.
 ✨ Took: 2s
 ```
@@ -176,7 +177,7 @@ monk do bird/server/show-status
 ✔ Get templates/local/bird/server actions list success
 ✔ Got action parameters
 ✔ Parse parameters success
-✔ Running action: 
+✔ Running action:
 BIRD 2.0.9 ready.
 BIRD 2.0.9
 Router ID is 10.3.1.114

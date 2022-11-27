@@ -8,7 +8,7 @@ server:
     name: The BIRD Internet Routing Daemon
     publisher: monk.io
     icon: https://saidvandeklundert.net/img/bird_logo.png
-    description: The BIRD project aims to develop a fully functional dynamic IP routing daemon primarily targeted on (but not limited to) Linux, FreeBSD and other UNIX-like systems and distributed under the GNU General Public License. 
+    description: The BIRD project aims to develop a fully functional dynamic IP routing daemon primarily targeted on (but not limited to) Linux, FreeBSD and other UNIX-like systems and distributed under the GNU General Public License.
     source: https://gitlab.nic.cz/labs/bird
     version: 1.0
 
@@ -36,7 +36,7 @@ server:
         }
 
         protocol kernel {
-          ipv6 { 
+          ipv6 {
             export all;
           };
         }

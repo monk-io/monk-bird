@@ -49,10 +49,10 @@ server:
     bird4:
       image: ghcr.io/akafeng/bird
       image-tag: 2.0.9
-      # cap_add:
-      #   - NET_ADMIN
-      #   - NET_BROADCAST
-      #   - NET_RAW
+      cap-add:
+        - NET_ADMIN
+        - NET_BROADCAST
+        - NET_RAW
       ports:
         - 179:179/tcp
 

@@ -35,7 +35,7 @@ not connected to cluster
 ### Clone Repository
 
 ``` bash
-git clone git@github.com:CuteAnonymousPanda/monk-bird.git
+git clone git@github.com:monk-io/monk-bird.git
 ```
 
 ### Update configuration

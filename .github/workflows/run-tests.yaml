@@ -43,8 +43,6 @@ jobs:
       - name: Test - monk run
         run: |
           monk run --tag githubrunner "${JOB}"
-          echo sleeping 5m to let jfrog start
-          sleep 300
 
       - name: Test - monk describe
         run: |

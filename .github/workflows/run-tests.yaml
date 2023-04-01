@@ -64,14 +64,6 @@ jobs:
           P=$(echo $ENDPOINT | cut -f2 -d:)
           nc -w 30 -z $H $P
 
-      - name: Test - nc 179
-        run: |
-          set -x
-          ENDPOINT=$(monk describe "${JOB}" 2>&1 | awk '/ENDPOINT/ {print $3}' | grep 179)
-          H=$(echo $ENDPOINT | cut -f1 -d:)
-          P=$(echo $ENDPOINT | cut -f2 -d:)
-          nc -w 30 -z $H $P
-
       - name: Test - monk do show-status
         run: |
           monk do "${JOB}/show-status"

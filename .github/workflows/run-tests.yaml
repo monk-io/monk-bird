@@ -1,0 +1,95 @@
+name: Run the tests
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  create-cluster:
+    uses: monk-io/monk-test-infra/.github/workflows/create_cluster.yml@main
+    secrets: inherit
+
+  run-tests:
+    needs: create-cluster
+    runs-on: ubuntu-latest
+    container:
+      image: gcr.io/monk-releases/monk-ci:latest
+      env:
+        GCP_SECRET: ${{ secrets.KIT_TESTING_GCP_SECRET }}
+        MONK_LOGIN: ${{ secrets.KIT_TESTING_MONK_USERNAME }}
+        MONK_PASS: ${{ secrets.KIT_TESTING_MONK_PASSWORD }}
+        MONK_CLI_NO_FANCY: "true"
+        MONK_CLI_NO_COLOR: "true"
+        MONK_SOCKET: "monkcode://${{needs.create-cluster.outputs.monkcode}}"
+        JOB: local/bird/server
+
+    outputs:
+      monkcode: ${{needs.create-cluster.outputs.monkcode}}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies & setup monkd
+        run: |
+          apk add gawk curl
+          monk login --email "${MONK_LOGIN}" --password "${MONK_PASS}"
+
+      - name: Test - monk load
+        run: |
+          monk load MANIFEST
+
+      - name: Test - monk run
+        run: |
+          monk run --tag githubrunner "${JOB}"
+          echo sleeping 5m to let jfrog start
+          sleep 300
+
+      - name: Test - monk describe
+        run: |
+          monk describe "${JOB}"
+
+      - name: Test - monk info
+        run: |
+          monk info "${JOB}"
+
+      - name: Test - monk ps
+        run: |
+          monk ps --filter "${JOB}"
+
+      - name: Test - nc 179
+        run: |
+          set -x
+          ENDPOINT=$(monk describe "${JOB}" 2>&1 | awk '/ENDPOINT/ {print $3}' | grep 179)
+          H=$(echo $ENDPOINT | cut -f1 -d:)
+          P=$(echo $ENDPOINT | cut -f2 -d:)
+          nc -w 30 -z $H $P
+
+      - name: Test - nc 179
+        run: |
+          set -x
+          ENDPOINT=$(monk describe "${JOB}" 2>&1 | awk '/ENDPOINT/ {print $3}' | grep 179)
+          H=$(echo $ENDPOINT | cut -f1 -d:)
+          P=$(echo $ENDPOINT | cut -f2 -d:)
+          nc -w 30 -z $H $P
+
+      - name: Test - monk do show-status
+        run: |
+          monk do "${JOB}/show-status"
+
+      - name: Test - monk do show-protocols-all
+        run: |
+          monk do "${JOB}/show-protocols-all"
+
+      - name: Test - monk do show-route
+        run: |
+          monk do "${JOB}/show-route"
+
+  destroy-cluster:
+    needs: run-tests
+    if: always()
+    uses: monk-io/monk-test-infra/.github/workflows/nuke_cluster.yml@main
+    secrets: inherit
+    with:
+      monkcode: ${{needs.run-tests.outputs.monkcode}}

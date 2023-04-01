@@ -1,5 +1,5 @@
 BirdBGP meets Monk
-===
+==================
 
 This repository contains Monk.io template to deploy Bird BGP system either locally or on cloud of your choice (AWS, GCP, Azure, Digital Ocean).
 
@@ -18,6 +18,7 @@ This repository contains Monk.io template to deploy Bird BGP system either local
   - [Stop, remove and clean up workloads and templates](#stop-remove-and-clean-up-workloads-and-templates)
 
 ## Prerequisites
+
 - [Install Monk](https://docs.monk.io/docs/get-monk)
 - [Register and Login Monk](https://docs.monk.io/docs/acc-and-auth)
 - [Add Cloud Provider](https://docs.monk.io/docs/cloud-provider)
@@ -25,7 +26,7 @@ This repository contains Monk.io template to deploy Bird BGP system either local
 
 ### Make sure monkd is running.
 
-``` bash
+```bash
 foo@bar:~$ monk status
 daemon: ready
 auth: logged in
@@ -34,7 +35,7 @@ not connected to cluster
 
 ### Clone Repository
 
-``` bash
+```bash
 git clone git@github.com:monk-io/monk-bird.git
 ```
 
@@ -46,14 +47,14 @@ You could also use a `contents: <<< bird.conf` notation to read the contents of 
 
 ### Load Template
 
-``` bash
+```bash
 cd monk-bird
 monk load manifest.yaml
 ```
 
 ### Verify if it's loaded correctly
 
-``` bash
+```bash
 $ monk list -l bird
 ✔ Got the list
 Type      Template     Repository  Version  Tags
@@ -62,7 +63,7 @@ runnable  bird/server  local       -        -
 
 ## Deploy Bird
 
-``` bash
+```bash
 $ monk run bird/server
 ✔ Starting the job: local/bird/server... DONE
 ✔ Preparing nodes DONE
@@ -90,7 +91,7 @@ $ monk run bird/server
 
 ### show-protocols-all
 
-``` bash
+```bash
 $ monk do bird/server/show-protocols-all
 ✔ Get templates/local/bird/server actions list success
 ✔ Got action parameters
@@ -160,7 +161,7 @@ static1    Static     master4    up     19:01:33.794
 
 ### show-route
 
-``` bash
+```bash
 $ monk do bird/server/show-route
 ✔ Get templates/local/bird/server actions list success
 ✔ Got action parameters
@@ -172,7 +173,7 @@ BIRD 2.0.9 ready.
 
 ### show-status
 
-``` bash
+```bash
 monk do bird/server/show-status
 ✔ Get templates/local/bird/server actions list success
 ✔ Got action parameters
@@ -191,7 +192,7 @@ Daemon is up and running
 
 ## Stop, remove and clean up workloads and templates
 
-``` bash
+```bash
 monk purge    bird/server
 monk purge -x bird/server
 ```

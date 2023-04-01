@@ -43,9 +43,9 @@ server:
       image: ghcr.io/akafeng/bird
       image-tag: 2.0.9
       cap-add:
-        - NET_ADMIN
-        - NET_BROADCAST
-        - NET_RAW
+        - CAP_NET_ADMIN
+        - CAP_NET_BROADCAST
+        - CAP_NET_RAW
       ports:
         - 179:179/tcp
   actions:

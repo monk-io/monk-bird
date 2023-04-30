@@ -46,8 +46,12 @@ server:
         - CAP_NET_ADMIN
         - CAP_NET_BROADCAST
         - CAP_NET_RAW
-      ports:
-        - 179:179/tcp
+  services:
+    bird:
+      container: artifactory
+      port: 179
+      protocol: tcp
+      host-port: 179
   actions:
     show-status:
       code: exec("bird4", "/bin/bash", "-c", `/usr/sbin/birdc show status`)

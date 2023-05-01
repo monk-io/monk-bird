@@ -60,7 +60,7 @@ server:
         - CAP_NET_RAW
   services:
     bird:
-      container: artifactory
+      container: bird4
       port: 179
       protocol: tcp
       host-port: 179

@@ -1,17 +1,28 @@
-namespace: /bird
+---
+namespace: bird
 
 server:
   defines: runnable
-
   metadata:
     website: https://bird.network.cz/
     name: The BIRD Internet Routing Daemon
     publisher: monk.io
     icon: https://saidvandeklundert.net/img/bird_logo.png
-    description: The BIRD project aims to develop a fully functional dynamic IP routing daemon primarily targeted on (but not limited to) Linux, FreeBSD and other UNIX-like systems and distributed under the GNU General Public License.
+    description: |
+      The BIRD project aims to develop a fully functional dynamic IP routing daemon primarily targeted on (but not limited to) Linux, FreeBSD and other UNIX-like systems and distributed under the GNU General Public License.
+
+      ---
+
+      Notes:
+
+      This template has available 3 actions:
+
+      show-status
+      show-protocols-all
+      show-route
     source: https://gitlab.nic.cz/labs/bird
     version: 1.0
-
+    tags: Bird Routing Software, Border Gateway Protocol (BGP), BGP Daemon, Routing Protocol, Linux Routing, Network Routing, Internet Routing, Network Protocol, Route Filtering, Route Aggregation, Autonomous System (AS), Routing Tables, Network Topology, Internet Service Provider (ISP), Network Security, Network Performance, Network Monitoring, Network Troubleshooting, Open Source Software, Network Automation
   files:
     config:
       container: bird4
@@ -19,43 +30,40 @@ server:
       path: /etc/bird/bird.conf
       contents: |
         log "/dev/stdout" { debug, trace, info, remote, warning, error, auth, fatal, bug };
-
         protocol device {
         }
-
         protocol direct {
           disabled;
           ipv4;
           ipv6;
         }
-
         protocol kernel {
           ipv4 {
             export all;
           };
         }
-
         protocol kernel {
           ipv6 {
             export all;
           };
         }
-
         protocol static {
             ipv4;
         }
-
   containers:
     bird4:
       image: ghcr.io/akafeng/bird
       image-tag: 2.0.9
       cap-add:
-        - NET_ADMIN
-        - NET_BROADCAST
-        - NET_RAW
-      ports:
-        - 179:179/tcp
-
+        - CAP_NET_ADMIN
+        - CAP_NET_BROADCAST
+        - CAP_NET_RAW
+  services:
+    bird:
+      container: artifactory
+      port: 179
+      protocol: tcp
+      host-port: 179
   actions:
     show-status:
       code: exec("bird4", "/bin/bash", "-c", `/usr/sbin/birdc show status`)

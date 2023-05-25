@@ -22,7 +22,7 @@ server:
       show-route
     source: https://gitlab.nic.cz/labs/bird
     version: 1.0
-    tags: route aggregation, network monitoring, routing protocol, border gateway protocol, route filtering, network performance, network troubleshooting, network protocol, network routing, network automation, routing tables, network security, network topology
+    tags: network automation, routing tables, network monitoring, network performance, route filtering, network protocol, network topology, routing protocol, border gateway protocol, route aggregation, network routing, network security, network troubleshooting
   files:
     config:
       container: bird4

@@ -22,7 +22,7 @@ server:
       show-route
     source: https://gitlab.nic.cz/labs/bird
     version: 1.0
-    tags: Bird Routing Software, Border Gateway Protocol (BGP), BGP Daemon, Routing Protocol, Linux Routing, Network Routing, Internet Routing, Network Protocol, Route Filtering, Route Aggregation, Autonomous System (AS), Routing Tables, Network Topology, Internet Service Provider (ISP), Network Security, Network Performance, Network Monitoring, Network Troubleshooting, Open Source Software, Network Automation
+    tags: bird routing software, border gateway protocol (bgp), bgp daemon, routing protocol, linux routing, network routing, internet routing, network protocol, route filtering, route aggregation, autonomous system (as), routing tables, network topology, internet service provider (isp), network security, network performance, network monitoring, network troubleshooting, open source software, network automation
   files:
     config:
       container: bird4

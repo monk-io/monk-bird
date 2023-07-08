@@ -1,11 +1,10 @@
-BirdBGP meets Monk
-==================
+# BirdBGP meets Monk
 
 This repository contains Monk.io template to deploy Bird BGP system either locally or on cloud of your choice (AWS, GCP, Azure, Digital Ocean).
 
 - [BirdBGP meets Monk](#birdbgp-meets-monk)
   - [Prerequisites](#prerequisites)
-    - [Make sure monkd is running.](#make-sure-monkd-is-running)
+    - [Make sure monkd is running](#make-sure-monkd-is-running)
     - [Clone Repository](#clone-repository)
     - [Update configuration](#update-configuration)
     - [Load Template](#load-template)
@@ -24,7 +23,7 @@ This repository contains Monk.io template to deploy Bird BGP system either local
 - [Add Cloud Provider](https://docs.monk.io/docs/cloud-provider)
 - [Add Instance](https://docs.monk.io/docs/multi-cloud)
 
-### Make sure monkd is running.
+### Make sure monkd is running
 
 ```bash
 foo@bar:~$ monk status

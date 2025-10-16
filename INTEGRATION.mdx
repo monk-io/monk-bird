@@ -1,0 +1,248 @@
+---
+title: BIRD Internet Routing Daemon
+description: Ready-to-run BIRD container template for BGP and dynamic routing protocol daemon.
+primary_category: networking
+tags: [bird, bgp, routing, ospf, template, runnable, network-infrastructure]
+integration_type: template
+hosting_models: [self-hosted]
+website_url: https://bird.network.cz/
+docs_url: https://bird.network.cz/?get_doc
+publisher: monk.io
+---
+
+## Overview
+
+This template provides a production‑ready BIRD routing daemon instance as a Monk runnable. You can:
+
+- Run it directly to get a managed dynamic routing daemon with sensible defaults
+- Inherit it in your own runnable to seamlessly add BGP, OSPF, RIP, and other routing protocols to your network infrastructure
+
+BIRD (BIRD Internet Routing Daemon) is a fully functional dynamic IP routing daemon for Unix-like systems. It supports IPv4 and IPv6 with all major routing protocols including BGP, OSPF, RIP, and static routes, making it ideal for ISP, datacenter, and enterprise networking.
+
+## What this template manages
+
+- BIRD routing daemon container (configurable image tag)
+- Network service with routing protocols
+- Persistent volumes for configuration and state
+- IPv4 and IPv6 routing support
+- Protocol debugging and logging
+
+## Quick start (run directly)
+
+1) Load templates
+
+```bash
+monk load MANIFEST
+```
+
+2) Run BIRD with defaults
+
+```bash
+monk run bird/bird
+```
+
+3) Customize configuration (recommended via inheritance)
+
+Running directly uses the defaults defined in this template's `variables`. For production use:
+
+- Preferred: inherit and customize variables with your own configuration as shown below.
+- Alternative: fork/clone and edit the `variables` in `bird/bird.yaml`, then `monk load MANIFEST` and run.
+
+Once started, BIRD will load configuration and establish routing sessions. Interact with it using `birdc` commands.
+
+## Configuration
+
+Key variables you can customize in this template:
+
+```yaml
+variables:
+  bird-image-tag: "latest"            # container image tag
+  router-id: "1.1.1.1"                # router ID (usually loopback IP)
+  bird-config: "..."                  # custom BIRD configuration
+```
+
+Configuration is persisted under `${monk-volume-path}/bird` on the host. State files are stored in `${monk-volume-path}/bird/var:/var/run/bird`.
+
+## Use by inheritance (recommended for network infrastructure)
+
+Inherit the BIRD runnable in your network infrastructure and customize the routing configuration. Example:
+
+```yaml
+namespace: mynetwork
+router:
+  defines: runnable
+  inherits: bird/bird
+  variables:
+    router-id: "10.0.0.1"
+  files:
+    bird-config:
+      container: bird
+      path: /etc/bird/bird.conf
+      contents: |
+        router id 10.0.0.1;
+        
+        protocol device {
+        }
+        
+        protocol kernel {
+          ipv4 {
+            import none;
+            export all;
+          };
+        }
+        
+        protocol bgp peer1 {
+          local as 65001;
+          neighbor 10.0.0.2 as 65002;
+          ipv4 {
+            import all;
+            export all;
+          };
+        }
+```
+
+Then run your network infrastructure:
+
+```bash
+monk run mynetwork/router
+```
+
+## Persistence and configuration
+
+- Config path: `${monk-volume-path}/bird/etc:/etc/bird`
+- State path: `${monk-volume-path}/bird/var:/var/run/bird`
+- You can mount custom BIRD configuration files into the config path to tune routing behavior.
+
+## Features
+
+- **Multi-Protocol**: BGP-4, OSPFv2, OSPFv3, RIPv2, RIPng
+- **IPv6 Support**: Full IPv4 and IPv6 routing
+- **BGP Features**: Route reflection, confederations, graceful restart
+- **Filtering**: Powerful route filtering language
+- **Multiple RIBs**: Support for multiple routing tables
+- **Fast Convergence**: Efficient route updates
+- **Scripting**: Extensive configuration language
+
+## BGP Configuration
+
+Example BGP peering:
+
+```
+protocol bgp peer_upstream {
+  description "Upstream ISP";
+  local as 65001;
+  neighbor 203.0.113.1 as 65000;
+  
+  ipv4 {
+    import filter {
+      # Accept default route
+      if net = 0.0.0.0/0 then accept;
+      reject;
+    };
+    export filter {
+      # Export our networks
+      if net ~ [ 198.51.100.0/24 ] then accept;
+      reject;
+    };
+  };
+}
+```
+
+## OSPF Configuration
+
+Example OSPF:
+
+```
+protocol ospf v2 ospf_internal {
+  ipv4 {
+    import all;
+    export all;
+  };
+  
+  area 0.0.0.0 {
+    interface "eth0" {
+      hello 10;
+      dead 40;
+      type broadcast;
+    };
+  };
+}
+```
+
+## Static Routes
+
+```
+protocol static {
+  ipv4;
+  
+  route 0.0.0.0/0 via 10.0.0.1;
+  route 192.168.1.0/24 via 10.0.1.1;
+}
+```
+
+## BIRD Control
+
+Interact with BIRD using `birdc`:
+
+```bash
+# Check BIRD status
+birdc show status
+
+# Show routes
+birdc show route
+
+# Show protocols
+birdc show protocols
+
+# Show BGP details
+birdc show protocol all bgp_peer1
+
+# Reload configuration
+birdc configure
+```
+
+## Use cases
+
+BIRD excels at:
+- ISP and datacenter routing
+- BGP peering and internet exchange points (IXP)
+- Enterprise OSPF networks
+- Route servers
+- Anycast routing
+- Software-defined networking (SDN)
+
+
+## Related templates
+
+- Combine with monitoring tools for network observability
+- See other networking templates in this repository for complementary services
+
+## Troubleshooting
+
+- If routing protocols are not establishing sessions, verify neighbor IPs are reachable and firewall rules allow routing traffic (TCP 179 for BGP).
+- Ensure configuration syntax is correct by testing with `birdc configure` after changes.
+- Check logs:
+
+```bash
+monk logs -l 500 -f bird/bird
+```
+
+- Verify BIRD status:
+
+```bash
+birdc show status
+```
+
+- View protocol states:
+
+```bash
+birdc show protocols
+```
+
+- Debug specific protocol by adding `debug all;` to the protocol configuration in bird.conf
+- For BGP session issues:
+  - Verify neighbor IP is reachable
+  - Check AS numbers match configuration
+  - Verify firewall allows TCP 179
+- For OSPF issues, check interface configurations and area settings
+- Use `birdc show route` to inspect routing table entries
